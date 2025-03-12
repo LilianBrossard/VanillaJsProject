@@ -55,7 +55,16 @@ class Country {
   }
 
   getBorders() {
-    return this.borders;
+    let voisins = this.borders.map((border) => {
+      const country = Country.all_countries[border];
+      if(!country) {
+        console.error("Erreur avec le pays " + this.name + " : pays voisin " + border + " non trouvé");
+        return "N/A";
+      }
+      return country;
+    }
+    );
+    return voisins;
   }
 
   getCurrencies() {

@@ -15,7 +15,7 @@ function outsideTheContinent() {
   Object.values(Country.all_countries).forEach((pays) => {
     pays.getBorders().forEach((border) => {
       if (
-        Country.all_countries[border].region != pays.region &&
+        border.region != pays.region &&
         !result.includes(pays)
       ) {
         result.push(pays);
@@ -44,7 +44,7 @@ function moreNeighbors() {
         pays: country.name,
         vosins: country
           .getBorders()
-          .map((border) => Country.all_countries[border].name),
+          .map((border) => border.name),
       };
     })
   );
@@ -87,12 +87,12 @@ function withCommonLanguage() {
     country.getLanguages().forEach((Language) => {
       country.getBorders().forEach((paysVoisin) => {
         if (
-          Country.all_countries[paysVoisin].getLanguages().includes(Language)
+          paysVoisin.getLanguages().includes(Language)
         ) {
           if (
-            !commonLanguagesCountry.includes(Country.all_countries[paysVoisin])
+            !commonLanguagesCountry.includes(paysVoisin)
           ) {
-            commonLanguagesCountry.push(Country.all_countries[paysVoisin]);
+            commonLanguagesCountry.push(paysVoisin);
           }
           if (!commonLanguagesLang.includes(Language)) {
             commonLanguagesLang.push(Language);
@@ -116,12 +116,12 @@ function withoutCommonCurrency() {
       let commonCurrency = false;
       country.getBorders().forEach((paysVoisin) => {
         if (
-          Country.all_countries[paysVoisin].getCurrencies().includes(currency)
+          paysVoisin.getCurrencies().includes(currency)
         ) {
           commonCurrency = true;
         }
       });
-      if (!commonCurrency && !result.includes(country.name)) {
+      if (!commonCurrency && !result.some((item) => item.pays === country.name)) {
         result.push({
           pays: country.name,
         });
