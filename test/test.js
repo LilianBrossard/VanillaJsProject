@@ -106,12 +106,14 @@ function withCommonLanguage() {
         }
       });
     });
-    result.push({
-      pays: country.name,
-      paysVoisins: commonLanguagesCountry,
-      languesCommunes: commonLanguagesLang,
+    if (commonLanguagesCountry.length > 0 && commonLanguagesLang.length > 0) {
+      result.push({
+        pays: country.name,
+        paysVoisins: commonLanguagesCountry,
+        languesCommunes: commonLanguagesLang,
+      });
+    }
     });
-  });
   console.table(result);
 }
 
