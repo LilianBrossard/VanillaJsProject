@@ -172,5 +172,3 @@ function moreTopLevelDomains() {
 
   console.table(result);
 }
-
-console.log(Country.all_countries["FRA"].getPopDensity());
