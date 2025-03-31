@@ -84,7 +84,7 @@ function closePopup() {
 }
 
 function addRaw(nom, pop, surf, dens, cont, flag, alpha3Code) {
-  let table = document.getElementById("countriesV3");
+  let table = document.getElementById("countriesV4");
   let element = document.createElement("tr");
   alpha3Code = alpha3Code.toString();
   element.innerHTML =
@@ -114,7 +114,7 @@ function addRaw(nom, pop, surf, dens, cont, flag, alpha3Code) {
 let page = -1;
 
 function newPage(nombre) {
-  let table = document.getElementById("countriesV3");
+  let table = document.getElementById("countriesV4");
   let maxPage = Math.ceil(Object.values(Country.all_countries).length / 25);
   let elements = table.getElementsByTagName("tr");
   if (nombre >= 0) {
