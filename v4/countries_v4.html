@@ -27,15 +27,22 @@
         ></path>
       </g>
     </svg>
+    <div id="filters"></div>
+        <label for="continentFilter">Continent:</label>
+        <select id="continentFilter">
+            <option value="">-- Tous les continents --</option>
+        </select>
+
+        <label for="languageFilter">Langue:</label>
+        <select id="languageFilter">
+            <option value="">-- Toutes les langues --</option>
+        </select>
+
+        <label for="countryFilter">Pays:</label>
+        <input type="text" id="countryFilter" placeholder="Rechercher un pays..." />
+    </div>
     <table id="countriesV4">
-      <tr>
-        <th>Nom en français</th>
-        <th>Population</th>
-        <th>Surface</th>
-        <th>Densité de population</th>
-        <th>Continent d’appartenance</th>
-        <th>Drapeau</th>
-      </tr>
+
     </table>
     <div class="pagination-boutton">
       <button onclick="newPage(-1)" id="Prev">Prev</button>

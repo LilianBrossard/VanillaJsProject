@@ -7,6 +7,41 @@ Language.fill_languages(); // Remplir le tableau associatif des langues
 Country.fill_countries(); // Remplir le tableau associatif des pays
 // console.table(Country.all_countries); // Afficher les pays
 
+let continent = null;
+let langue = null;
+let search = null;
+let page = -1;
+
+function appliquerFiltres() {
+  ListeCountry = Object.values(Country.all_countries).filter((country) => {
+    if (continent && country.region !== continent) {
+      return false;
+    }
+    if (langue && !country.getLanguages().some((l) => l.name === langue)) {
+      return false;
+    }
+    if (
+      search &&
+      !country.name
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .includes(
+          search
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+        )
+    ) {
+      return false;
+    }
+    return true;
+  });
+  affichage(ListeCountry);
+  page = -1; // Reset page to 0 after filtering
+  newPage(0);
+}
+
 function infoPays(alpha3Code) {
   let cross = document.querySelector("#cross");
   cross.classList.remove("hidden");
@@ -111,8 +146,6 @@ function addRaw(nom, pop, surf, dens, cont, flag, alpha3Code) {
   table.appendChild(element);
 }
 
-let page = -1;
-
 function newPage(nombre) {
   let table = document.getElementById("countriesV4");
   let maxPage = Math.ceil(Object.values(Country.all_countries).length / 25);
@@ -158,20 +191,83 @@ function newPage(nombre) {
   }
 }
 
-Object.values(Country.all_countries).forEach((country) => {
-  const countriess = countries.find((c) => c.alpha3Code === country.alpha3Code);
-  const area = countriess.area;
-  const flag = countriess.flag;
-  const density = Math.round(country.getPopDensity());
-  addRaw(
-    country.name,
-    country.population,
-    area,
-    density,
-    country.region,
-    flag,
-    country.alpha3Code
-  );
+function affichage(ListeCountry) {
+  let table = document.getElementById("countriesV4");
+  while (table.firstChild) {
+    table.removeChild(table.firstChild);
+  }
+  let headerRow = document.createElement("tr");
+  headerRow.innerHTML = `
+    <th>Nom en français</th>
+    <th>Population</th>
+    <th>Surface</th>
+    <th>Densité de population</th>
+    <th>Continent d’appartenance</th>
+    <th>Drapeau</th>
+  `;
+  table.appendChild(headerRow);
+  Object.values(ListeCountry).forEach((country) => {
+    const countriess = countries.find(
+      (c) => c.alpha3Code === country.alpha3Code
+    );
+    const area = countriess.area;
+    const flag = countriess.flag;
+    const density = Math.round(country.getPopDensity());
+    addRaw(
+      country.name,
+      country.population,
+      area,
+      density,
+      country.region,
+      flag,
+      country.alpha3Code
+    );
+  });
+}
+
+affichage(Country.all_countries); // Afficher les pays
+newPage(0);
+
+let continents = [];
+countries.forEach((country) => {
+  if (!continents.includes(country.region) && country.region) {
+    continents.push(country.region);
+  }
+});
+let continentFilter = document.getElementById("continentFilter");
+continents.forEach((continent) => {
+  let option = document.createElement("option");
+  option.value = continent;
+  option.textContent = continent;
+  continentFilter.appendChild(option);
+});
+continentFilter.addEventListener("change", (event) => {
+  continent = event.target.value || null;
+  appliquerFiltres();
 });
 
-newPage(0);
+let languages = [];
+countries.forEach((country) => {
+  country.languages.forEach((language) => {
+    if (!languages.includes(language.name)) {
+      languages.push(language.name);
+    }
+  });
+});
+let languageFilter = document.getElementById("languageFilter");
+languages.forEach((language) => {
+  let option = document.createElement("option");
+  option.value = language;
+  option.textContent = language;
+  languageFilter.appendChild(option);
+});
+languageFilter.addEventListener("change", (event) => {
+  langue = event.target.value || null;
+  appliquerFiltres();
+});
+
+let searchInput = document.getElementById("countryFilter");
+searchInput.addEventListener("input", (event) => {
+  search = event.target.value || null;
+  appliquerFiltres();
+});
